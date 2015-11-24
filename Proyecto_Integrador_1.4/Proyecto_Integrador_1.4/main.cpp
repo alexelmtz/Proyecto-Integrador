@@ -7,18 +7,17 @@
 //
 //  Alejandro Elizondo A01193334
 //  Alberto Drucker A01193336
-//
-//  BUG: SI PONES UN NUMERO LEJOS DEL CERO, BORRA UN NUMERO CERCA DEL CERO Y LO SUSTITUYE POR ESE NUMERO
 
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
 const int MAXRENG = 4;
-int iMat [MAXRENG][MAXRENG] = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,}};
+int iMat [MAXRENG][MAXRENG] = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
 int iArrNo[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-int iMatF [MAXRENG][MAXRENG] = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,}};
-int iReng = 0, iCol = 0, iNum, iRand, iTam=16, iCol0, iReng0, iRengNum, iColNum, iGanar=0;
+int iMatF [MAXRENG][MAXRENG] = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
+int iReng = 0, iCol = 0, iNum, iRand, iTam=16, iCol0, iReng0, iRengNum, iColNum, iGanar=0, iMov=0;
 char cResp, cGanar='n';
 
 void Ganar()
@@ -34,7 +33,6 @@ void Ganar()
     if (iGanar==16)
         cGanar='s';
 }
-
 void siguienteDato()
 {
     if (iReng < 3){
@@ -44,7 +42,6 @@ void siguienteDato()
         iCol++;
     }
 }
-
 void Matriz ()
 {
     int dato = iArrNo[iRand];
@@ -61,8 +58,6 @@ void Matriz ()
     }
     iTam--;
 }
-
-
 void muestraMatriz()
 {
     cout<<"•---•---•---•---•"<<endl;
@@ -77,7 +72,6 @@ void muestraMatriz()
         cout<<"•---•---•---•---•"<<endl;
     }
 }
-
 void Cambio()
 {
     if(iReng0==0)
@@ -107,7 +101,6 @@ void Cambio()
                 iMat[0][3]=iNum;
                 iMat[0][2]=0;
             }
-            
         }
         else
         {
@@ -126,7 +119,6 @@ void Cambio()
                 iMat[iReng0][iCol0]=iNum;
                 iMat[iReng0][iCol0-1]=0;
             }
-            
         }
     }
     else if (iReng0==3)
@@ -156,7 +148,6 @@ void Cambio()
                 iMat[3][3]=iNum;
                 iMat[3][2]=0;
             }
-            
         }
         else
         {
@@ -175,7 +166,6 @@ void Cambio()
                 iMat[iReng0][iCol0]=iNum;
                 iMat[iReng0][iCol0-1]=0;
             }
-            
         }
     }
     else
@@ -234,33 +224,62 @@ void Cambio()
                 iMat[iReng0][iCol0]=iNum;
                 iMat[iReng0+1][iCol0]=0;
             }
-            else if (iMat[iReng0-1][iCol0])
+            else if (iMat[iReng0-1][iCol0]== iNum)
             {
                 iMat[iReng0][iCol0]=iNum;
                 iMat[iReng0-1][iCol0]=0;
             }
-            
         }
-        
     }
 }
-
 int main(int argc, const char * argv[]) {
     // insert code here...
+    char cGenera;
+    int iCero=0;
+    time_t start,end;
+    time (&start);
     cout << "Bienvenido al juego"<<endl;
+    cout << "Para ganar ordena los numeros del 1 al 15 de arriba hacia abajo. La ultima casilla de la tabla debe de contener el 0"<<endl;
+
     srand(time(NULL));
-    for (int x = 0;x<MAXRENG;x++)
+    
+    cout<<"Quieres alimentar tu los numeros o quieres que se generen aleatoriamente?(escrime 'a' para alimentar o 'r' para que se generen aleatoriamente"<<endl;
+    cin>>cGenera;
+    if(cGenera=='r')
     {
-        for (int y=0;y<MAXRENG;y++)
+        for (int x = 0;x<MAXRENG;x++)
         {
-            if (iTam > 1)
-                iRand=rand()%(iTam-1);
-            else
-                iRand = 0;
-            Matriz();
+            for (int y=0;y<MAXRENG;y++)
+            {
+                if (iTam > 1)
+                    iRand=rand()%(iTam-1);
+                else
+                    iRand = 0;
+                Matriz();
+            }
         }
     }
-    muestraMatriz();
+    else
+    {
+        cout<<"Recuerda que debes de poner un 0 en alguna de las posiciones y debes de ingresar numeros del 1 al 15 sin repetir para que el juego funcione."<<endl;
+        do
+        {
+            for (int i=0; i<MAXRENG;i++)
+            {
+                for (int j=0; j< MAXRENG;j++)
+                {
+                    do
+                    {
+                        cout << "Teclea el valor de iMatValores["<<i+1<< ","<<j+1<<"]"<<endl;
+                        cin >> iMat[i][j];
+                        if(iMat[i][j]==0)
+                            iCero=1;
+                    }while(iMat[i][j] <0 || iMat[i][j]>15);
+                }
+            }
+        }while(iCero !=1);
+    }
+        muestraMatriz();
     do{
         for (int x = 0;x<MAXRENG;x++)
         {
@@ -273,8 +292,11 @@ int main(int argc, const char * argv[]) {
                 }
             }
         }
-        cout << "Ingresa el numero que deseas que se mueva al lugar del 0"<<endl;
-        cin>>iNum;
+        do
+        {
+            cout << "Ingresa el numero que deseas que se mueva al lugar del 0"<<endl;
+            cin>>iNum;
+        }while(iNum<1 || iNum>15);
         for (int x = 0;x<MAXRENG;x++)
         {
             for (int y=0;y<MAXRENG;y++)
@@ -286,11 +308,32 @@ int main(int argc, const char * argv[]) {
                 }
             }
         }
-        Cambio();        //  BUG: SI PONES UN NUMERO LEJOS DEL CERO, BORRA UN NUMERO CERCA DEL CERO Y LO SUSTITUYE POR ESE NUMERO
-        
+        Cambio();
         muestraMatriz();
-        cout << "Deseas seguir jugando (s/n)"<<endl;
-        cin >> cResp;
+        iMov++;
+        Ganar();
+        if(cGanar=='s')
+        {
+            cout<<"Felicidades!Ganaste!"<<endl;
+            cout<< "Hiciste "<<iMov<<" movimientos en este juego."<<endl;
+            time (&end);
+            double dif = difftime (end,start);
+            printf ("Jugaste por %.0lf segundos.", dif );
+            return 0;
+        }
+        do
+        {
+            cout << "Deseas seguir jugando (s/n)"<<endl;
+            cin >> cResp;
+            if(tolower(cResp) == 'n')
+            {
+                cout<< "Hiciste "<<iMov<<" moviemientos en este juego."<<endl;
+                time (&end);
+                double dif = difftime (end,start);
+                printf ("Jugaste por %.0lf segundos.", dif );
+                return 0;
+            }
+        }while(tolower(cResp) != 's');
     }while(tolower(cResp) == 's');
-    return 0;
+return 0;
 }
