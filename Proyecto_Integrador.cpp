@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  Proyecto_Integrador_1.4
+//  Proyecto_Integrador
 //
 //  Created by Alex Elizondo on 11/23/15.
 //  Copyright © 2015 Alex Elizondo. All rights reserved.
@@ -62,16 +62,21 @@ void Matriz ()
 }
 void muestraMatriz()
 {
-    cout<<"•---•---•---•---•"<<endl;
+    cout<<"+----+----+----+----+"<<endl;
     for (int x = 0;x<MAXRENG;x++)
     {   cout <<'|';
         for (int y=0;y<MAXRENG;y++)
         {
-            cout << iMat[x][y] << '\t';
+            cout << iMat[x][y];
+            if(iMat[x][y]>9)
+                cout<< "  ";
+            else
+                cout<< "   ";
+
             cout <<'|';
         }
         cout << endl;
-        cout<<"•---•---•---•---•"<<endl;
+        cout<<"+----+----+----+----+"<<endl;
     }
 }
 void Cambio()
@@ -220,7 +225,7 @@ void Cambio()
                 iMat[iReng0][iCol0]=iNum;
                 iMat[iReng0][iCol0+1]=0;
             }
-            
+
             else if(iMat[iReng0+1][iCol0] == iNum)
             {
                 iMat[iReng0][iCol0]=iNum;

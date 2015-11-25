@@ -5,6 +5,8 @@
 //  Created by Alex Elizondo on 11/17/15.
 //  Copyright © 2015 Alex Elizondo. All rights reserved.
 //
+//  Alejandro Elizondo A01193334
+//  Alberto Drucker A01193336
 
 #include <iostream>
 #include <iomanip>
@@ -14,9 +16,24 @@ using namespace std;
 
 const int MAXRENG = 4;
 int iMat [MAXRENG][MAXRENG] = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,}};
+int iMatF [4][4] = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,}};
 int iArrNo[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-int iReng = 0, iCol = 0, iNum, iRand, iTam=16, iCol0, iReng0, iRengNum, iColNum;
-char cResp;
+int iReng = 0, iCol = 0, iNum, iRand, iTam=16, iCol0, iReng0, iRengNum, iColNum, iCont=0, iGanar=0;
+char cResp, cGanar='n';
+
+void Ganar()
+{
+    for (int x = 0;x<4;x++)
+    {
+        for (int y=0;y<4;y++)
+        {
+            if(iMat[x][y]==iMatF[x][y])
+               iGanar++;
+        }
+    }
+    if (iGanar==16)
+        cGanar='s';
+}
 
 void siguienteDato()
 {
@@ -222,9 +239,7 @@ void Cambio()
                 iMat[iReng0][iCol0]=iNum;
                 iMat[iReng0-1][iCol0]=0;
             }
-
         }
-
     }
 }
 
@@ -260,6 +275,7 @@ void Cambio()
                {
                    cout << "Ingresa el numero que deseas que se mueva al lugar del 0"<<endl;
                    cin>>iNum;
+                   iNum++;
                }while(iNum<1 || iNum>15);
                     for (int x = 0;x<MAXRENG;x++)
                {
@@ -274,8 +290,8 @@ void Cambio()
                }
                Cambio();
                muestraMatriz();
-               cout << "Deseas seguir jugando (s/n)"<<endl;
-               cin >> cResp;
-           }while(tolower(cResp) == 's');
+                   cout << "Deseas seguir jugando (s/n)"<<endl;
+                   cin >> cResp;
+                }while(tolower(cResp) == 's');
            return 0;
        }
