@@ -21,7 +21,7 @@ void Display (int Array[4][4]){
 		cout << endl << "•---•---•---•---•---•" << endl;
 	}	
 }
-// Generates a random puzzle
+// Generates a puzzle with a random order
 void Generate(int Array[4][4]){
 	int iRand;
 	string str = "";	// Used to keep count of used numbers
