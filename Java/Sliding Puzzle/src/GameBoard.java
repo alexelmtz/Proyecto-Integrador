@@ -3,8 +3,6 @@
 //	Linkedin: linkedin.com/in/alejandro-elizondo
 //	Github: github.com/alexelmtz/Sliding-Puzzle
 
-package Game;
-
 import java.util.*;
 
 public class GameBoard {

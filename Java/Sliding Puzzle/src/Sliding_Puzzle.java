@@ -3,9 +3,10 @@
 //	Linkedin: linkedin.com/in/alejandro-elizondo
 //	Github: github.com/alexelmtz/Sliding-Puzzle
 
-package Game;
-
 import java.util.*;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Sliding_Puzzle {
 
@@ -13,12 +14,13 @@ public class Sliding_Puzzle {
 		Scanner input = new Scanner(System.in);
 		int iNum;
 		boolean bPlay;
+		JOptionPane.showMessageDialog(null,"Order the numbers from 1 to 15 starting from the top-left corner.\n"
+				+ " The bottom-right corner of the puzzle should be empty in order to win.", 
+				"Welcome to the game", JOptionPane.PLAIN_MESSAGE);
 		
-		System.out.println("\n Welcome to the game\n");
-		System.out.print("In order to win, order the numbers from 1 to 15, starting \nfrom the top-left corner.");
-		System.out.println("The bottom-right corner of the \npuzzle should be empty in order to win.\n");
-		System.out.println("What game do you want to play? (type 3 or 4)");
-		iNum = input.nextInt();
+		String sNum = JOptionPane.showInputDialog("What game do you want to play? (3 or 4)");
+		iNum = Integer.parseInt(sNum);
+
 		GameBoard game = new GameBoard(iNum);
 
 		game.Display();
