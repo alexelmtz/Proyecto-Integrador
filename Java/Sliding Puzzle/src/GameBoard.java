@@ -3,18 +3,20 @@
 //	Linkedin: linkedin.com/in/alejandro-elizondo
 //	Github: github.com/alexelmtz/Sliding-Puzzle
 
+import java.awt.Container;
+import java.awt.GridLayout;
 import java.util.*;
+import javax.swing.*;
 
-public class GameBoard {
+public class GameBoard extends JFrame {
 	private int[][] iarrGameBoard;
 	private int iSize;
 	private int iRowCero;
 	private int iColCero;
 
 	GameBoard(int iSize) {
-		iarrGameBoard = new int[iSize][iSize];
-		this.iSize = iSize;
-		Generate();
+		super("GameBoard");
+		Generate(iSize);
 	}
 
 	// Switches blank space with user's input. Return false if the switch failed.
@@ -44,27 +46,32 @@ public class GameBoard {
 	}
 
 	// Generates a puzzle with a random order
-	public void Generate() {		
+	public void Generate(int iSize) {	
+		Container pane = getContentPane();
+		pane.setLayout(new GridLayout(iSize,iSize));
+		
 		Random rand = new Random();
 		int iRand;
 		List<Integer> lintUsed = new ArrayList<>();		// List of numbers that have been added to the game board
-
-		for (int i = 0; i < iSize; i++)
-			for (int j = 0; j < iSize; j++)
-			{
-				do {
-					iRand = rand.nextInt(iSize*iSize - 0) + 0;
-				} while (lintUsed.contains(iRand));		// The number is already in the game board
-				
-				if (iRand == 0)
-				{
-					iRowCero = i;
-					iColCero = j;
-				}
-				
-				iarrGameBoard[i][j] = iRand;
-				lintUsed.add(iRand);
-			}
+		for (int i = 0; i < iSize*iSize; i++)
+		{
+			do {
+				iRand = rand.nextInt(iSize*iSize - 0) + 0;
+			} while (lintUsed.contains(iRand));		// The number is already in the game board
+			
+//			if (iRand == 0)
+//			{
+//				iRowCero = i;
+//				iColCero = j;
+//			}
+			
+			lintUsed.add(iRand);
+			
+			Icon pic = new ImageIcon(getClass().getResource(Integer.toString(iRand) + ".png"));
+			JButton button = new JButton(pic);
+			button.setBorder(BorderFactory.createEmptyBorder());
+			pane.add(button);
+		}
 	}
 
 	// Displays the game board

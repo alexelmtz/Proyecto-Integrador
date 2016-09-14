@@ -4,7 +4,6 @@
 //	Github: github.com/alexelmtz/Sliding-Puzzle
 
 import java.util.*;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -20,8 +19,15 @@ public class Sliding_Puzzle {
 		
 		String sNum = JOptionPane.showInputDialog("What game do you want to play? (3 or 4)");
 		iNum = Integer.parseInt(sNum);
-
+		
 		GameBoard game = new GameBoard(iNum);
+		
+//		Buttons gameboard = new Buttons(iNum);
+		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		game.pack();
+		game.setVisible(true);
+
+		
 
 		game.Display();
 
