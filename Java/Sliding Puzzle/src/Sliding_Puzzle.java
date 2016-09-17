@@ -26,23 +26,18 @@ public class Sliding_Puzzle {
 		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		game.pack();
 		game.setVisible(true);
-
-		
-
-		game.Display();
+		game.setResizable(false);
 
 		do {
 			System.out.println("What number would you like to move?");
 			iNum = input.nextInt();
 			if (!game.Switch(iNum))
 				System.out.println("Error that number can't be switched, please try again");
-			game.Display();
 			System.out.println("Do you want to keep playing? (true or false)");
 			bPlay = input.nextBoolean();
 		} while (bPlay);
 		
 		System.out.println("Thank you for playing");
-		game.Display();
 		input.close();
 	}
 }

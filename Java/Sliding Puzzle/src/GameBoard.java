@@ -53,48 +53,27 @@ public class GameBoard extends JFrame {
 		Random rand = new Random();
 		int iRand;
 		List<Integer> lintUsed = new ArrayList<>();		// List of numbers that have been added to the game board
-		for (int i = 0; i < iSize*iSize; i++)
-		{
-			do {
-				iRand = rand.nextInt(iSize*iSize - 0) + 0;
-			} while (lintUsed.contains(iRand));		// The number is already in the game board
-			
-//			if (iRand == 0)
-//			{
-//				iRowCero = i;
-//				iColCero = j;
-//			}
-			
-			lintUsed.add(iRand);
-			
-			Icon pic = new ImageIcon(getClass().getResource(Integer.toString(iRand) + ".png"));
-			JButton button = new JButton(pic);
-			button.setBorder(BorderFactory.createEmptyBorder());
-			pane.add(button);
-		}
-	}
-
-	// Displays the game board
-	public void Display() {
-		String sBoarder = "";
 		for (int i = 0; i < iSize; i++)
-			sBoarder += "•----";
-		sBoarder += "•";
-
-		System.out.println(sBoarder);
-		for (int i = 0; i < iSize; i++)
-		{
-			System.out.print("| ");
 			for (int j = 0; j < iSize; j++)
-				if (iarrGameBoard[i][j] == 0)
-					System.out.print("   | ");
-				else if (iarrGameBoard[i][j] < 10)
-					System.out.print(" " + iarrGameBoard[i][j] + " | ");
-				else
-					System.out.print(iarrGameBoard[i][j] + " | ");
-
-			System.out.println("\n" + sBoarder);
-		}
+			{
+				do {
+					iRand = rand.nextInt(iSize*iSize - 0) + 0;
+				} while (lintUsed.contains(iRand));		// The number is already in the game board
+			
+//				if (iRand == 0)
+//				{
+//					iRowCero = i;
+//					iColCero = j;
+//				}
+			
+				lintUsed.add(iRand);
+			
+//				Icon pic = new ImageIcon(getClass().getResource(Integer.toString(iRand) + ".png"));
+//				JButton button = new JButton(pic);
+//				button.setBorder(BorderFactory.createEmptyBorder());
+				Button b = new Button(iRand,i,j);
+				pane.add(b.getButton());
+			}
 	}
 
 }
