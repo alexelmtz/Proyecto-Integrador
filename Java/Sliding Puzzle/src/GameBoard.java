@@ -11,7 +11,6 @@ import java.util.*;
 import javax.swing.*;
 
 public class GameBoard extends JFrame {
-//	private int[][] iarrGameBoard;
 	private JButton[][] buttonMat;
 	private Container pane;
 	private int iSize;
@@ -22,6 +21,39 @@ public class GameBoard extends JFrame {
 		super("GameBoard");
 		iSize = iS;
 		Generate();
+//		GenerateToWin();
+	}
+	
+	public void GenerateToWin() {
+		buttonMat = new JButton[iSize][iSize];
+		pane = getContentPane();
+		pane.setLayout(new GridLayout(iSize,iSize));
+		Handler handler = new Handler();
+		
+		List<Integer> lintUsed = new ArrayList<>();		// List of numbers that have been added to the game board
+		for (int iR = 0; iR < iSize; iR++)
+			for (int iC = 0; iC < iSize; iC++)
+			{
+			
+				if (iR == 3 && iC == 3)
+				{
+					iRowCero = iR;
+					iColCero = iC;
+				}
+				int iNumber = iR*iSize + iC + 1;
+				if (iNumber == (iSize*iSize) )
+					iNumber = 0;
+			
+				lintUsed.add(iNumber);
+			
+				ImageIcon pic = new ImageIcon(getClass().getResource(Integer.toString(iNumber) + ".png"));
+				pic.setDescription(Integer.toString(iNumber));
+				JButton button = new JButton(pic);
+				button.addActionListener(handler);
+				button.setBorder(BorderFactory.createEmptyBorder());
+				buttonMat[iR][iC] = button;
+				pane.add(button);
+			}
 	}
 
 	// Generates a puzzle with a random order
@@ -34,8 +66,8 @@ public class GameBoard extends JFrame {
 		Random rand = new Random();
 		int iRand;
 		List<Integer> lintUsed = new ArrayList<>();		// List of numbers that have been added to the game board
-		for (int i = 0; i < iSize; i++)
-			for (int j = 0; j < iSize; j++)
+		for (int iR = 0; iR < iSize; iR++)
+			for (int iC = 0; iC < iSize; iC++)
 			{
 				do {
 					iRand = rand.nextInt(iSize*iSize - 0) + 0;
@@ -43,17 +75,18 @@ public class GameBoard extends JFrame {
 			
 				if (iRand == 0)
 				{
-					iRowCero = i;
-					iColCero = j;
+					iRowCero = iR;
+					iColCero = iC;
 				}
 			
 				lintUsed.add(iRand);
 			
-				Icon pic = new ImageIcon(getClass().getResource(Integer.toString(iRand) + ".png"));
+				ImageIcon pic = new ImageIcon(getClass().getResource(Integer.toString(iRand) + ".png"));
+				pic.setDescription(Integer.toString(iRand));
 				JButton button = new JButton(pic);
 				button.addActionListener(handler);
 				button.setBorder(BorderFactory.createEmptyBorder());
-				buttonMat[i][j] = button;
+				buttonMat[iR][iC] = button;
 				pane.add(button);
 			}
 		
@@ -64,13 +97,13 @@ public class GameBoard extends JFrame {
 		int iRow = 0, iCol = 0;
 		
 		// Finds the position of the button to be switched
-		for (int i = 0; i < iSize; i++)
-			for (int j = 0; j < iSize; j++)
+		for (int iR = 0; iR < iSize; iR++)
+			for (int iC = 0; iC < iSize; iC++)
 			{
-				if (buttonMat[i][j] == b)
+				if (buttonMat[iR][iC] == b)
 				{
-					iRow = i;
-					iCol = j;
+					iRow = iR;
+					iCol = iC;
 				}
 			}
 		
@@ -94,6 +127,23 @@ public class GameBoard extends JFrame {
 		return false;
 	}
 	
+	// Checks if the gameboard is in order
+	private boolean Win() {
+		for (int iR = 0; iR < iSize; iR++)
+			for (int iC = 0; iC < iSize; iC++)
+			{
+				ImageIcon icon = (ImageIcon)buttonMat[iR][iC].getIcon();
+				if ( (iR*iSize + iC) == (iSize*iSize - 1) )		//It's the last position of the gameboard
+				{
+					if (!(Integer.parseInt(icon.getDescription()) == 0))
+						return false;
+				}
+				else if (!(Integer.parseInt(icon.getDescription()) == (iR*iSize + iC + 1) ))
+					return false;
+			}
+		return true;
+	}
+	
 	// Class that handles events
 	private class Handler implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
@@ -106,6 +156,12 @@ public class GameBoard extends JFrame {
 				{
 					validate();
 					repaint();
+				}
+				if (Win())
+				{
+					JOptionPane.showMessageDialog(null,"Congratulations!!! You Win!!!", 
+							"You Win", JOptionPane.PLAIN_MESSAGE);
+					System.exit(0);
 				}
 			}
 		}
