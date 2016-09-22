@@ -13,26 +13,41 @@ import javax.swing.*;
 public class GameBoard extends JFrame {
 	private JButton[][] buttonMat;
 	private Container pane;
-	private int iSize;
+	private int iDimension;
 	private int iRowCero;
 	private int iColCero;
-
-	GameBoard(int iS) {
-		super("GameBoard");
-		iSize = iS;
-		Generate();
-//		GenerateToWin();
+	private int iMoveCount;
+	private long lStartTime;
+	private long lEndTime;
+	
+	public int getDimension() {
+		return iDimension;
 	}
 	
+	public int getMoveCount() {
+		return iMoveCount;
+	}
+	
+	
+	GameBoard(int iS) {
+		super("GameBoard");
+		iDimension = iS;
+		iMoveCount = 0;
+		lStartTime = System.nanoTime();
+//		Generate();
+		GenerateToWin();
+	}
+	
+	
 	public void GenerateToWin() {
-		buttonMat = new JButton[iSize][iSize];
+		buttonMat = new JButton[iDimension][iDimension];
 		pane = getContentPane();
-		pane.setLayout(new GridLayout(iSize,iSize));
+		pane.setLayout(new GridLayout(iDimension,iDimension));
 		Handler handler = new Handler();
 		
 		List<Integer> lintUsed = new ArrayList<>();		// List of numbers that have been added to the game board
-		for (int iR = 0; iR < iSize; iR++)
-			for (int iC = 0; iC < iSize; iC++)
+		for (int iR = 0; iR < iDimension; iR++)
+			for (int iC = 0; iC < iDimension; iC++)
 			{
 			
 				if (iR == 3 && iC == 3)
@@ -40,8 +55,8 @@ public class GameBoard extends JFrame {
 					iRowCero = iR;
 					iColCero = iC;
 				}
-				int iNumber = iR*iSize + iC + 1;
-				if (iNumber == (iSize*iSize) )
+				int iNumber = iR*iDimension + iC + 1;
+				if (iNumber == (iDimension*iDimension) )
 					iNumber = 0;
 			
 				lintUsed.add(iNumber);
@@ -58,19 +73,19 @@ public class GameBoard extends JFrame {
 
 	// Generates a puzzle with a random order
 	public void Generate() {	
-		buttonMat = new JButton[iSize][iSize];
+		buttonMat = new JButton[iDimension][iDimension];
 		pane = getContentPane();
-		pane.setLayout(new GridLayout(iSize,iSize));
+		pane.setLayout(new GridLayout(iDimension,iDimension));
 		Handler handler = new Handler();
 		
 		Random rand = new Random();
 		int iRand;
 		List<Integer> lintUsed = new ArrayList<>();		// List of numbers that have been added to the game board
-		for (int iR = 0; iR < iSize; iR++)
-			for (int iC = 0; iC < iSize; iC++)
+		for (int iR = 0; iR < iDimension; iR++)
+			for (int iC = 0; iC < iDimension; iC++)
 			{
 				do {
-					iRand = rand.nextInt(iSize*iSize - 0) + 0;
+					iRand = rand.nextInt(iDimension*iDimension - 0) + 0;
 				} while (lintUsed.contains(iRand));		// The number is already in the game board
 			
 				if (iRand == 0)
@@ -97,8 +112,8 @@ public class GameBoard extends JFrame {
 		int iRow = 0, iCol = 0;
 		
 		// Finds the position of the button to be switched
-		for (int iR = 0; iR < iSize; iR++)
-			for (int iC = 0; iC < iSize; iC++)
+		for (int iR = 0; iR < iDimension; iR++)
+			for (int iC = 0; iC < iDimension; iC++)
 			{
 				if (buttonMat[iR][iC] == b)
 				{
@@ -129,16 +144,16 @@ public class GameBoard extends JFrame {
 	
 	// Checks if the gameboard is in order
 	private boolean Win() {
-		for (int iR = 0; iR < iSize; iR++)
-			for (int iC = 0; iC < iSize; iC++)
+		for (int iR = 0; iR < iDimension; iR++)
+			for (int iC = 0; iC < iDimension; iC++)
 			{
 				ImageIcon icon = (ImageIcon)buttonMat[iR][iC].getIcon();
-				if ( (iR*iSize + iC) == (iSize*iSize - 1) )		//It's the last position of the gameboard
+				if ( (iR*iDimension + iC) == (iDimension*iDimension - 1) )		//It's the last position of the gameboard
 				{
 					if (!(Integer.parseInt(icon.getDescription()) == 0))
 						return false;
 				}
-				else if (!(Integer.parseInt(icon.getDescription()) == (iR*iSize + iC + 1) ))
+				else if (!(Integer.parseInt(icon.getDescription()) == (iR*iDimension + iC + 1) ))
 					return false;
 			}
 		return true;
@@ -152,15 +167,19 @@ public class GameBoard extends JFrame {
 			if (obj instanceof JButton)
 			{
 				JButton b = (JButton)obj;
-				if (Switch(b))	// The switch was successful, the clicked button was next to the empty space
+				// Checks if the switch was successful, the clicked button was next to the empty space
+				if (Switch(b))	
 				{
+					iMoveCount++;
 					validate();
 					repaint();
 				}
 				if (Win())
 				{
-					JOptionPane.showMessageDialog(null,"Congratulations!!! You Win!!!", 
-							"You Win", JOptionPane.PLAIN_MESSAGE);
+					lEndTime = System.nanoTime();
+					long lTotalTime = (lEndTime - lStartTime)/1000000000;
+					JOptionPane.showMessageDialog(null,"Congratulations!!! You Win!!!\nMoves:" + iMoveCount + "\nTime:" +
+					lTotalTime + " seconds", "You Win", JOptionPane.PLAIN_MESSAGE);
 					System.exit(0);
 				}
 			}

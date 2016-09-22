@@ -20,8 +20,6 @@ public class Sliding_Puzzle {
 		game.pack();
 		game.setVisible(true);
 		game.setResizable(false);
-		
-		System.out.println("Thank you for playing");
 		input.close();
 	}
 	
