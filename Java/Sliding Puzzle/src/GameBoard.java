@@ -7,6 +7,10 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
 import javax.swing.*;
 
@@ -180,6 +184,25 @@ public class GameBoard extends JFrame {
 					long lTotalTime = (lEndTime - lStartTime)/1000000000;
 					JOptionPane.showMessageDialog(null,"Congratulations!!! You Win!!!\nMoves:" + iMoveCount + "\nTime:" +
 					lTotalTime + " seconds", "You Win", JOptionPane.PLAIN_MESSAGE);
+					
+					try 
+					{
+						Connection mycon = DriverManager.getConnection("jdbc:mysql://localhost:3306/Scores?useSSL=false", "alexelmtz", "spuzzle/");
+						
+						Statement myStmt = mycon.createStatement();
+						
+						ResultSet myRs = myStmt.executeQuery("select * from Top_Scores");
+						
+						while (myRs.next())
+						{
+							JOptionPane.showMessageDialog(null,"Name: " + myRs.getString("Name") + "\n" + 
+									"Score: " + myRs.getInt("Score") + " moves\n" + "Time: " +  myRs.getInt("Time") + " seconds", 
+									"Top Scores", JOptionPane.PLAIN_MESSAGE);
+						}
+					} catch (Exception e)
+					{
+						e.printStackTrace();
+					}
 					System.exit(0);
 				}
 			}

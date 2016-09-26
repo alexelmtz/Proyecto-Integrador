@@ -12,7 +12,6 @@ public class Sliding_Puzzle {
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		
-		
 		GameBoard game = new GameBoard(WelcomeMessage());	//Initializes the gameboard according to the user's input
 		
 //		Buttons gameboard = new Buttons(iNum);
