@@ -42,7 +42,7 @@ public class GameBoard extends JFrame {
 		GenerateToWin();
 	}
 	
-	
+	// Temporal generate used for testing
 	public void GenerateToWin() {
 		buttonMat = new JButton[iDimension][iDimension];
 		pane = getContentPane();
@@ -132,11 +132,7 @@ public class GameBoard extends JFrame {
 		if (dDistance == 1)
 		{				
 			Icon aux = buttonMat[iRow][iCol].getIcon();
-//			pane.remove(iRow+iCol);
-//			pane.add(buttonMat[iRowCero][iColCero], iRow+iCol);
 			buttonMat[iRow][iCol].setIcon(buttonMat[iRowCero][iColCero].getIcon());
-//			pane.remove(iRowCero+iColCero);
-//			pane.add(aux,iRowCero+iColCero);
 			buttonMat[iRowCero][iColCero].setIcon(aux);
 			iColCero = iCol;
 			iRowCero = iRow;
@@ -171,8 +167,7 @@ public class GameBoard extends JFrame {
 			if (obj instanceof JButton)
 			{
 				JButton b = (JButton)obj;
-				// Checks if the switch was successful, the clicked button was next to the empty space
-				if (Switch(b))	
+				if (Switch(b))	//Switch is successful if the button clicked was next to the empty space
 				{
 					iMoveCount++;
 					validate();
@@ -184,29 +179,90 @@ public class GameBoard extends JFrame {
 					long lTotalTime = (lEndTime - lStartTime)/1000000000;
 					JOptionPane.showMessageDialog(null,"Congratulations!!! You Win!!!\nMoves:" + iMoveCount + "\nTime:" +
 					lTotalTime + " seconds", "You Win", JOptionPane.PLAIN_MESSAGE);
-					
-					try 
-					{
-						Connection mycon = DriverManager.getConnection("jdbc:mysql://localhost:3306/Scores?useSSL=false", "alexelmtz", "spuzzle/");
-						
-						Statement myStmt = mycon.createStatement();
-						
-						ResultSet myRs = myStmt.executeQuery("select * from Top_Scores");
-						
-						while (myRs.next())
-						{
-							JOptionPane.showMessageDialog(null,"Name: " + myRs.getString("Name") + "\n" + 
-									"Score: " + myRs.getInt("Score") + " moves\n" + "Time: " +  myRs.getInt("Time") + " seconds", 
-									"Top Scores", JOptionPane.PLAIN_MESSAGE);
-						}
-					} catch (Exception e)
-					{
-						e.printStackTrace();
-					}
+					TopScores(lTotalTime);
 					System.exit(0);
 				}
 			}
 		}
+		
+		// Gets the top 10 scores of the game from MySQL database
+		private void TopScores(long lTotalTime) {
+			ArrayList<String> sTopPlayers = new ArrayList<String>();
+			ArrayList<Integer> iTopMoves = new ArrayList<Integer>();
+			ArrayList<Integer> iTopTime = new ArrayList<Integer>();
+			String sTop = "\t\t\tTop Scores\n\n";
+			
+			String sName = JOptionPane.showInputDialog("Please type your name");
+			try {
+				//Get connection with MySQL database
+				Connection mycon = DriverManager.getConnection("jdbc:mysql://localhost:3306/Sliding_Puzzle?useSSL=false",
+						"root", "puzzle/");
+				Statement myStmt = mycon.createStatement();
+				//Adds the new score to the database
+				String sql = "INSERT INTO Top_Scores(Name, Score, Time) "
+						+ "VALUES ('"+sName+"', '"+iMoveCount+"', '"+lTotalTime+"')";
+				
+				myStmt.executeUpdate(sql);
+				//Execute SQL query
+				ResultSet myRs = myStmt.executeQuery("SELECT * from Top_Scores");
+				//Adds contents of the database to the lists
+				while (myRs.next())
+				{
+					sTopPlayers.add(myRs.getString("Name"));
+					iTopMoves.add(myRs.getInt("Score"));
+					iTopTime.add(myRs.getInt("Time"));
+				}
+				Sort(sTopPlayers, iTopMoves, iTopTime);
+				
+				for (int i = 0; i < 10 && i < iTopTime.size(); i++)
+					sTop += sTopPlayers.get(i) + " " + iTopMoves.get(i) + " moves " + iTopTime.get(i) + " seconds\n";
+				
+				JOptionPane.showMessageDialog(null, sTop, "Top Scores", JOptionPane.PLAIN_MESSAGE);
+				
+			} catch (Exception e) {
+				System.out.println("Error with database connection");
+				e.printStackTrace();
+			}
+		}
+		
+		// Sorts the lists in ascending order according to the amount of moves, followed by the time
+		public void Sort(ArrayList<String> sL, ArrayList<Integer> iLMoves, ArrayList<Integer> iLTime)
+		{
+			String saux;
+			int iauxM, iauxT;
+			for (int i = 0; i < iLMoves.size(); i++)
+				for (int j = 1; j < iLMoves.size() - i; j++)
+					if(iLMoves.get(j-1) > iLMoves.get(j))
+					{
+						// Swaps positions of Moves List
+						iauxM = iLMoves.get(j-1);
+						iLMoves.set(j-1, iLMoves.get(j));
+						iLMoves.set(j, iauxM);
+						// Swaps positions of Time List
+						iauxT = iLTime.get(j-1);
+						iLTime.set(j-1, iLTime.get(j));
+						iLTime.set(j, iauxT);
+						// Swaps positions of Name List
+						saux = sL.get(j-1);
+						sL.set(j-1, sL.get(j));
+						sL.set(j, saux);
+					}
+					else if (iLMoves.get(j-1) == iLMoves.get(j))
+						if (iLTime.get(j-1) > iLTime.get(j))
+						{
+							// Swaps positions of Moves List
+							iauxM = iLMoves.get(j-1);
+							iLMoves.set(j-1, iLMoves.get(j));
+							iLMoves.set(j, iauxM);
+							// Swaps positions of Time List
+							iauxT = iLTime.get(j-1);
+							iLTime.set(j-1, iLTime.get(j));
+							iLTime.set(j, iauxT);
+							// Swaps positions of Name List
+							saux = sL.get(j-1);
+							sL.set(j-1, sL.get(j));
+							sL.set(j, saux);
+						}
+		}
 	}
-
 }
