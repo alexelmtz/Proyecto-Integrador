@@ -54,7 +54,7 @@ public class GameBoard extends JFrame {
 			for (int iC = 0; iC < iDimension; iC++)
 			{
 			
-				if (iR == 3 && iC == 3)
+				if (iR == iDimension-1 && iC == iDimension-1)
 				{
 					iRowCero = iR;
 					iColCero = iC;
@@ -191,20 +191,28 @@ public class GameBoard extends JFrame {
 			ArrayList<Integer> iTopMoves = new ArrayList<Integer>();
 			ArrayList<Integer> iTopTime = new ArrayList<Integer>();
 			String sTop = "\t\t\tTop Scores\n\n";
+			String mySQLTable;
 			
 			String sName = JOptionPane.showInputDialog("Please type your name");
+			if (sName == null || sName.length() < 1)
+				sName = "Default";
 			try {
 				//Get connection with MySQL database
 				Connection mycon = DriverManager.getConnection("jdbc:mysql://localhost:3306/Sliding_Puzzle?useSSL=false",
 						"root", "puzzle/");
 				Statement myStmt = mycon.createStatement();
 				//Adds the new score to the database
-				String sql = "INSERT INTO Top_Scores(Name, Score, Time) "
+				if (iDimension == 4)
+					mySQLTable = "Top_Scores_4";
+				else
+					mySQLTable = "Top_Scores_3";
+					
+				String sql = "INSERT INTO " + mySQLTable + "(Name, Score, Time) "
 						+ "VALUES ('"+sName+"', '"+iMoveCount+"', '"+lTotalTime+"')";
 				
 				myStmt.executeUpdate(sql);
 				//Execute SQL query
-				ResultSet myRs = myStmt.executeQuery("SELECT * from Top_Scores");
+				ResultSet myRs = myStmt.executeQuery("SELECT * from " + mySQLTable);
 				//Adds contents of the database to the lists
 				while (myRs.next())
 				{
