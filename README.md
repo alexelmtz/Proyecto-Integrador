@@ -1,6 +1,6 @@
 # Sliding-Puzzle
 Description:
-Sliding Puzzle game developed in Java and C++. The Java version of the game uses GUI and allows the user to register high scores using MySQL database. The game can be played either in a 3x3 or a 4x4 gameboard to make it even harder to solve. The tiles are randomly distributed each time the game is played.
+Sliding Puzzle game developed in Java and C++. The Java version of the game uses GUI and allows the user to register high scores using MySQL database. The game can be played either in a 3x3 or a 4x4 game board to make it even harder to solve. The tiles are randomly distributed each time the game is played.
 
 Purpose:
 The purpose of making this game was for learning purposes. It started as a school project developed in C++ and I decided to make it better and at the same time learn new things. I decided to remake the game in Java in order to learn the language and implement GUI. Later on I decided to learn how to use databases with my projet, so I learned how to use MySQL and how to connect it with this Java application. The plan is to continue with this project and later on offer the user the option to give up and solve the puzzle in the most optimal way (showing the user the steps he needed to win).
