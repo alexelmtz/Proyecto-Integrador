@@ -18,8 +18,8 @@ public class GameBoard extends JFrame {
 	private JButton[][] buttonMat;
 	private Container pane;
 	private int iDimension;
-	private int iRowCero;
-	private int iColCero;
+	private int iRowZero;
+	private int iColZero;
 	private int iMoveCount;
 	private long lStartTime;
 	private long lEndTime;
@@ -32,14 +32,12 @@ public class GameBoard extends JFrame {
 		return iMoveCount;
 	}
 	
-	
 	GameBoard(int iS) {
 		super("GameBoard");
 		iDimension = iS;
 		iMoveCount = 0;
 		lStartTime = System.nanoTime();
-//		Generate();
-		GenerateToWin();
+		Generate();
 	}
 	
 	// Temporal generate used for testing
@@ -56,8 +54,8 @@ public class GameBoard extends JFrame {
 			
 				if (iR == iDimension-1 && iC == iDimension-1)
 				{
-					iRowCero = iR;
-					iColCero = iC;
+					iRowZero = iR;
+					iColZero = iC;
 				}
 				int iNumber = iR*iDimension + iC + 1;
 				if (iNumber == (iDimension*iDimension) )
@@ -94,8 +92,8 @@ public class GameBoard extends JFrame {
 			
 				if (iRand == 0)
 				{
-					iRowCero = iR;
-					iColCero = iC;
+					iRowZero = iR;
+					iColZero = iC;
 				}
 			
 				lintUsed.add(iRand);
@@ -108,7 +106,6 @@ public class GameBoard extends JFrame {
 				buttonMat[iR][iC] = button;
 				pane.add(button);
 			}
-		
 	}
 	
 	// Switches blank space with the button the user clicked. Returns false if the switch failed.
@@ -127,15 +124,15 @@ public class GameBoard extends JFrame {
 			}
 		
 		// If the distance between the numbers is equal to 1, then that means that they are next to each other
-		double dDistance = Math.sqrt(Math.pow(iRow - iRowCero, 2) + Math.pow(iCol - iColCero, 2));
+		double dDistance = Math.sqrt(Math.pow(iRow - iRowZero, 2) + Math.pow(iCol - iColZero, 2));
 		// Checks if the number is next to the blank space
 		if (dDistance == 1)
 		{				
 			Icon aux = buttonMat[iRow][iCol].getIcon();
-			buttonMat[iRow][iCol].setIcon(buttonMat[iRowCero][iColCero].getIcon());
-			buttonMat[iRowCero][iColCero].setIcon(aux);
-			iColCero = iCol;
-			iRowCero = iRow;
+			buttonMat[iRow][iCol].setIcon(buttonMat[iRowZero][iColZero].getIcon());
+			buttonMat[iRowZero][iColZero].setIcon(aux);
+			iColZero = iCol;
+			iRowZero = iRow;
 			
 			return true;
 		}
@@ -179,7 +176,7 @@ public class GameBoard extends JFrame {
 					long lTotalTime = (lEndTime - lStartTime)/1000000000;
 					JOptionPane.showMessageDialog(null,"Congratulations!!! You Win!!!\nMoves:" + iMoveCount + "\nTime:" +
 					lTotalTime + " seconds", "You Win", JOptionPane.PLAIN_MESSAGE);
-					TopScores(lTotalTime);
+//					TopScores(lTotalTime);
 					System.exit(0);
 				}
 			}

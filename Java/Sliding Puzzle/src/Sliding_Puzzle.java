@@ -14,7 +14,6 @@ public class Sliding_Puzzle {
 		
 		GameBoard game = new GameBoard(WelcomeMessage());	//Initializes the gameboard according to the user's input
 		
-//		Buttons gameboard = new Buttons(iNum);
 		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		game.pack();
 		game.setVisible(true);
@@ -26,8 +25,7 @@ public class Sliding_Puzzle {
 	public static int WelcomeMessage() {
 		int iNum = 0;
 		boolean correctInput = false;
-		JOptionPane.showMessageDialog(null,"Order the numbers from 1 to 15 starting from the top-left corner.\n"
-				+ " The bottom-right corner of the puzzle should be empty in order to win.", 
+		JOptionPane.showMessageDialog(null,"Order the numbers in ascending order starting from the top-left corner.\n", 
 				"Welcome to the game", JOptionPane.PLAIN_MESSAGE);
 		
 		do
